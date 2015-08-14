@@ -1,0 +1,28 @@
+#!/usr/bin/python3.4
+"""
+  Turns on an LED on for one second, then off for one second, repeatedly.
+
+  Most Arduinos have an on-board LED you can control. On the Uno and
+  Leonardo, it is attached to digital pin 13. If you're unsure what
+  pin the on-board LED is connected to on your Arduino model, check
+  the documentation at http://www.arduino.cc
+"""
+
+from pymata_aio.pymata3 import PyMata3
+from pymata_aio.constants import Constants
+
+BOARD_LED = 13
+board = PyMata3()
+
+board.set_pin_mode(BOARD_LED, Constants.OUTPUT)
+
+while True:
+    print("LED On")
+    board.digital_write(BOARD_LED, 1)
+    board.sleep(1.0)
+    print("LED Off")
+    board.digital_write(BOARD_LED, 0)
+    board.sleep(1.0)
+
+# Run from the command line via python blink.py
+# Use Ctrl-C to exit the program (it never ends otherwise)
