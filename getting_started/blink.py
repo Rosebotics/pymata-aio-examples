@@ -14,9 +14,12 @@ from pymata_aio.constants import Constants
 BOARD_LED = 13
 board = PyMata3()
 
-board.set_pin_mode(BOARD_LED, Constants.OUTPUT)
 
-while True:
+def setup():
+    board.set_pin_mode(BOARD_LED, Constants.OUTPUT)
+
+
+def loop():
     print("LED On")
     board.digital_write(BOARD_LED, 1)
     board.sleep(1.0)
@@ -26,3 +29,8 @@ while True:
 
 # Run from the command line via python blink.py
 # Use Ctrl-C to exit the program (it never ends otherwise)
+
+if __name__ == "__main__":
+    setup()
+    while True:
+        loop()
