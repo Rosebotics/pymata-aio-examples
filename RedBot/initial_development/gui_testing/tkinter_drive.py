@@ -20,9 +20,6 @@ PWM_R = 6
 board = PyMata3()
 button_names = ["Left", "Forward", "Right", "CCW Spin", "Stop", "CW Spin", "Left Rev", "Reverse", "Right Rev"]
 
-
-
-
 def main():
     board.set_pin_mode(L_CTRL_1, Constants.OUTPUT)
     board.set_pin_mode(L_CTRL_2, Constants.OUTPUT)
@@ -55,8 +52,8 @@ def callback(root, button_index):
     :type name: str
     """
 
-    s = 'You clicked on button {}'
-    root.title(s.format(button_index))
+    s = 'You clicked  {}'
+    root.title(s.format(button_names[button_index]))
     if button_index == 0:
         print("Go left forward")
     elif button_index == 1:
