@@ -33,11 +33,28 @@ def callback(root, button_index):
     :type root: tkinter.Tk
     :type name: str
     """
-    print("Test")
 
     s = 'You clicked on button {}'
     root.title(s.format(button_index))
     if button_index == 0:
         print("Go left forward")
+    elif button_index == 1:
+        print("Go forward")
+
+    elif button_index == 2:
+        print("Go right forward")
+    elif button_index == 3:
+        print("CCW Pivot")
+    elif button_index == 4:
+        print("Stop")
+    elif button_index == 5:
+        print("CW Pivot")
+    elif button_index == 6:
+        print("Go left reverse")
+    elif button_index == 7:
+        print("Reverse")
+    elif button_index == 8:
+        print("Go right reverse")
+
 
 main()
