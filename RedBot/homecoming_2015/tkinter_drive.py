@@ -99,6 +99,7 @@ def gripperOpen(event=None):
     for pos in range(GRIPPER_MID,GRIPPER_OPEN, +1):
         board.analog_write(SERVO_GRIPPER_PIN,pos)
         board.sleep(.015)
+
 def gripperClose(event=None):
     print("Close the gripper")
     for pos in range(GRIPPER_MID,GRIPPER_CLOSE, -1):
@@ -106,58 +107,53 @@ def gripperClose(event=None):
         board.sleep(.015)
 
 def driveForward(event=None):
-    for i in range(0,2):
-        print("Go forward")
-        board.digital_write(L_CTRL_1, 1)
-        board.digital_write(L_CTRL_2, 0)
-        board.analog_write(PWM_L, 150)
-        board.digital_write(R_CTRL_1, 1)
-        board.digital_write(R_CTRL_2, 0)
-        board.analog_write(PWM_R, 150)
+    print("Go forward")
+    board.digital_write(L_CTRL_1, 1)
+    board.digital_write(L_CTRL_2, 0)
+    board.analog_write(PWM_L, 150)
+    board.digital_write(R_CTRL_1, 1)
+    board.digital_write(R_CTRL_2, 0)
+    board.analog_write(PWM_R, 150)
 
 
 def ccwSpin(event=None):
     print("Spin counter clockwise")
-    for i in range(0,2):
-        board.digital_write(L_CTRL_1, 0)
-        board.digital_write(L_CTRL_2, 1)
-        board.analog_write(PWM_L, 150)
-        board.digital_write(R_CTRL_1, 1)
-        board.digital_write(R_CTRL_2, 0)
-        board.analog_write(PWM_R, 150)
+    board.digital_write(L_CTRL_1, 0)
+    board.digital_write(L_CTRL_2, 1)
+    board.analog_write(PWM_L, 150)
+    board.digital_write(R_CTRL_1, 1)
+    board.digital_write(R_CTRL_2, 0)
+    board.analog_write(PWM_R, 150)
 
 
 def stop(event=None):
     print("Stop")
-    for i in range(0,2):
-        board.digital_write(L_CTRL_1, 1)
-        board.digital_write(L_CTRL_2, 1)
-        board.analog_write(PWM_L, 0)
-        board.digital_write(R_CTRL_1, 1)
-        board.digital_write(R_CTRL_2, 1)
-        board.analog_write(PWM_R, 0)
+    board.digital_write(L_CTRL_1, 1)
+    board.digital_write(L_CTRL_2, 1)
+    board.analog_write(PWM_L, 0)
+    board.digital_write(R_CTRL_1, 1)
+    board.digital_write(R_CTRL_2, 1)
+    board.analog_write(PWM_R, 0)
 
 
 def cwSpin(event=None):
     print("Clockwise spin")
-    for i in range(0,2):
-        board.digital_write(L_CTRL_1, 1)
-        board.digital_write(L_CTRL_2, 0)
-        board.analog_write(PWM_L, 150)
-        board.digital_write(R_CTRL_1, 0)
-        board.digital_write(R_CTRL_2, 1)
-        board.analog_write(PWM_R, 150)
+    board.digital_write(L_CTRL_1, 1)
+    board.digital_write(L_CTRL_2, 0)
+    board.analog_write(PWM_L, 150)
+    board.digital_write(R_CTRL_1, 0)
+    board.digital_write(R_CTRL_2, 1)
+    board.analog_write(PWM_R, 150)
 
 
 def driveReverse(event=None):
     print("Go Reverse")
-    for i in range(0,2):
-        board.digital_write(L_CTRL_1, 0)
-        board.digital_write(L_CTRL_2, 1)
-        board.analog_write(PWM_L, 150)
-        board.digital_write(R_CTRL_1, 0)
-        board.digital_write(R_CTRL_2, 1)
-        board.analog_write(PWM_R, 150)
+    board.digital_write(L_CTRL_1, 0)
+    board.digital_write(L_CTRL_2, 1)
+    board.analog_write(PWM_L, 150)
+    board.digital_write(R_CTRL_1, 0)
+    board.digital_write(R_CTRL_2, 1)
+    board.analog_write(PWM_R, 150)
 
 
 main()
