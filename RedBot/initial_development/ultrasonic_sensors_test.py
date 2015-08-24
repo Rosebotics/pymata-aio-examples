@@ -1,6 +1,5 @@
 """
-Uses the tkinter/ttk graphics library that comes with Python to drive a RedBot.
-"""
+Ultrasonic testing, using the tkinter GUI as a starting point."""
 
 import tkinter
 from tkinter import ttk
@@ -25,7 +24,8 @@ GRIPPER_OPEN = 170
 GRIPPER_ARM_DOWN = 70
 GRIPPER_ARM_MID = 120
 GRIPPER_ARM_UP = 150
-
+RIGHT_SONAR_PIN = 0
+LEFT_SONAR_PIN = 1
 
 
 board = PyMata3()
@@ -35,6 +35,8 @@ def main():
     print("tkinter GUI drive")
     board.servo_config(SERVO_GRIPPER_PIN)
     board.servo_config(SERVO_GRIPPER_ARM_PIN)
+    board.set_pin_mode(LEFT_SONAR_PIN, Constants.ANALOG)  # configures the button as an INPUT
+    board.set_pin_mode(RIGHT_SONAR_PIN, Constants.ANALOG)  # configures the button as an INPUTrffdf
     board.set_pin_mode(L_CTRL_1, Constants.OUTPUT)
     board.set_pin_mode(L_CTRL_2, Constants.OUTPUT)
     board.set_pin_mode(PWM_L, Constants.PWM)
@@ -76,8 +78,9 @@ def main():
     root.bind("<Down>", driveReverse)
     root.bind("<w>", armUp)
     root.bind("<s>", armDown)
-    root.bind("<d>", gripperOpen)
-    root.bind("<a>", gripperClose)
+    root.bind("<a>", gripperOpen)
+    root.bind("<d>", gripperClose)
+    root.bind("<f>", readSensors)
 
     root.mainloop()
 
@@ -150,7 +153,7 @@ def cwSpin(event=None):
 
 
 def driveReverse(event=None):
-    print("Go Reverse")
+    print("Go forward")
     for i in range(0,2):
         board.digital_write(L_CTRL_1, 0)
         board.digital_write(L_CTRL_2, 1)
@@ -159,5 +162,7 @@ def driveReverse(event=None):
         board.digital_write(R_CTRL_2, 1)
         board.analog_write(PWM_R, 150)
 
-
+def readSensors(event=None):
+    print("Left = {}".format(board.analog_read(LEFT_SONAR_PIN)))
+    print("Rightt = {}".format(board.analog_read(RIGHT_SONAR_PIN)))
 main()

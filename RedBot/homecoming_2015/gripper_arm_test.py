@@ -42,7 +42,6 @@ def loop():
 
     print("Close Gripper")
     for pos in range(60,170, +1):
-        (SERVO_GRIPPER_PIN,pos)
         board.analog_write(SERVO_GRIPPER_PIN,pos)
         board.sleep(.015)
 
