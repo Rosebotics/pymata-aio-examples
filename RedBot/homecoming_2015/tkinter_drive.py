@@ -26,8 +26,8 @@ GRIPPER_ARM_DOWN = 70
 GRIPPER_ARM_MID = 120
 GRIPPER_ARM_UP = 150
 
-
-
+straight_speed = 150
+turning_speed = 100
 board = PyMata3()
 
 
@@ -69,6 +69,15 @@ def main():
     button.grid(column=1, row=2)
     button["command"] = driveReverse
 
+    button = ttk.Button(main_frame, text="Speed + ")
+    button.grid(column=4, row=1)
+    button["command"] = speedIncrease
+
+    button = ttk.Button(main_frame, text="Speed -")
+    button.grid(column=4, row=2)
+    button["command"] = speedDecrease
+
+
     root.bind("<Up>", driveForward)
     root.bind("<Left>", ccwSpin)
     root.bind("<space>", stop)
@@ -78,6 +87,8 @@ def main():
     root.bind("<s>", armDown)
     root.bind("<d>", gripperOpen)
     root.bind("<a>", gripperClose)
+    root.bind("<,>", speedDecrease)
+    root.bind("<.>", speedIncrease)
 
     root.mainloop()
 
@@ -110,21 +121,20 @@ def driveForward(event=None):
     print("Go forward")
     board.digital_write(L_CTRL_1, 1)
     board.digital_write(L_CTRL_2, 0)
-    board.analog_write(PWM_L, 150)
+    board.analog_write(PWM_L, straight_speed)
     board.digital_write(R_CTRL_1, 1)
     board.digital_write(R_CTRL_2, 0)
-    board.analog_write(PWM_R, 150)
+    board.analog_write(PWM_R, straight_speed)
 
 
 def ccwSpin(event=None):
     print("Spin counter clockwise")
     board.digital_write(L_CTRL_1, 0)
     board.digital_write(L_CTRL_2, 1)
-    board.analog_write(PWM_L, 150)
+    board.analog_write(PWM_L, turning_speed)
     board.digital_write(R_CTRL_1, 1)
     board.digital_write(R_CTRL_2, 0)
-    board.analog_write(PWM_R, 150)
-
+    board.analog_write(PWM_R, turning_speed)
 
 def stop(event=None):
     print("Stop")
@@ -140,20 +150,41 @@ def cwSpin(event=None):
     print("Clockwise spin")
     board.digital_write(L_CTRL_1, 1)
     board.digital_write(L_CTRL_2, 0)
-    board.analog_write(PWM_L, 150)
+    board.analog_write(PWM_L, turning_speed)
     board.digital_write(R_CTRL_1, 0)
     board.digital_write(R_CTRL_2, 1)
-    board.analog_write(PWM_R, 150)
+    board.analog_write(PWM_R, turning_speed)
 
 
 def driveReverse(event=None):
     print("Go Reverse")
     board.digital_write(L_CTRL_1, 0)
     board.digital_write(L_CTRL_2, 1)
-    board.analog_write(PWM_L, 150)
+    board.analog_write(PWM_L, straight_speed)
     board.digital_write(R_CTRL_1, 0)
     board.digital_write(R_CTRL_2, 1)
-    board.analog_write(PWM_R, 150)
+    board.analog_write(PWM_R, straight_speed)
 
+
+def speedIncrease(event=None):
+    global straight_speed
+    global turning_speed
+    speed_adjust = 30
+    straight_speed += speed_adjust
+    straight_speed = min(straight_speed,255)
+    turning_speed += speed_adjust
+    turning_speed = min (turning_speed, 255)
+    print("Speed is now : {}, turning speed is : {} ".format(straight_speed,turning_speed))
+
+
+def speedDecrease(event=None):
+    global straight_speed
+    global turning_speed
+    speed_adjust = 30
+    straight_speed -= speed_adjust
+    straight_speed = max(straight_speed,0)
+    turning_speed -= speed_adjust
+    turning_speed = max(turning_speed, 0)
+    print("Speed is now : {}, turning speed is : {} ".format(straight_speed,turning_speed))
 
 main()
