@@ -7,9 +7,8 @@ from tkinter import ttk
 from pymata_aio.pymata3 import PyMata3
 from examples.sparkfun_redbot.sparkfun_experiments.library.redbot import RedBotEncoder, RedBotMotors
 
-
-# COM_PORT = None # Use automatic com port detection (the default)
-COM_PORT = "COM10"  # Manually specify the com port (optional)
+COM_PORT = None  # Use automatic com port detection (the default)
+# COM_PORT = "COM10"  # Manually specify the com port (optional)
 
 
 # RedBot motor pins from RedBot.h
@@ -90,6 +89,10 @@ def main():
     button = ttk.Button(main_frame, text="Reset Speeds")
     button.grid(column=6, row=7)
     button["command"] = reset_speed
+
+    exit_button = ttk.Button(main_frame, text="Shutdown")
+    exit_button.grid(column=7, row=8)
+    exit_button["command"] = shutdown
 
     root.bind("<Up>", driveForward)
     root.bind("<Left>", ccwSpin)
@@ -247,6 +250,14 @@ def turn_right_degree(event=None):
         right_count = encoders.get_ticks(ENCODER_PIN_RIGHT)
         board.sleep(0.05)
     motors.brake()
+
+
+def shutdown(event=None):
+    board.send_reset()
+    board.sleep(2)
+    board.shutdown()
+
+
 
 
 main()
