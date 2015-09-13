@@ -27,19 +27,21 @@ GRIPPER_MID = 120
 GRIPPER_OPEN = 160
 GRIPPER_ARM_DOWN = 70
 GRIPPER_ARM_MID = 120
-GRIPPER_ARM_UP = 150
+GRIPPER_ARM_UP = 180
 
 straight_speed = 150
 turning_speed = 100
 board = PyMata3(com_port=COM_PORT)
 last_button = None
 TURN_AMOUNT = 30
-encoders = RedBotEncoder(board)
+# encoders = RedBotEncoder(board)
 motors = RedBotMotors(board)
 ENCODER_PIN_LEFT = 16
 ENCODER_PIN_RIGHT = 10
 gripper_open = False
 arm_up = False
+
+pos = GRIPPER_ARM_MID
 
 
 def main():
@@ -49,6 +51,7 @@ def main():
     board.servo_config(SERVO_GRIPPER_ARM_PIN)
 
     root = tkinter.Tk()
+
     root.title("RedBot simple drive")
 
     main_frame = ttk.Frame(root, padding=30, relief="raised")
@@ -62,11 +65,11 @@ def main():
 
     button = ttk.Button(main_frame, text="Forward")
     button.grid(column=1, row=0)
-    button["command"] = driveForward
+    button["command"] = drive_forward
 
     button = ttk.Button(main_frame, text="CCW Spin")
     button.grid(column=0, row=1)
-    button["command"] = ccwSpin
+    button["command"] = ccw_spin
 
     button = ttk.Button(main_frame, text="Stop")
     button.grid(column=1, row=1)
@@ -74,19 +77,19 @@ def main():
 
     button = ttk.Button(main_frame, text="CW Spin")
     button.grid(column=2, row=1)
-    button["command"] = cwSpin
+    button["command"] = cw_spin
 
     button = ttk.Button(main_frame, text="Reverse")
     button.grid(column=1, row=2)
-    button["command"] = driveReverse
+    button["command"] = drive_reverse
 
     button = ttk.Button(main_frame, text="Speed + ")
     button.grid(column=4, row=1)
-    button["command"] = speedIncrease
+    button["command"] = speed_increase
 
     button = ttk.Button(main_frame, text="Speed -")
     button.grid(column=4, row=2)
-    button["command"] = speedDecrease
+    button["command"] = speed_decrease
 
     button = ttk.Button(main_frame, text="Reset Speeds")
     button.grid(column=6, row=7)
@@ -96,45 +99,47 @@ def main():
     exit_button.grid(column=7, row=8)
     exit_button["command"] = shutdown
 
-    root.bind("<w>", driveForward)
-    root.bind("<a>", ccwSpin)
-    root.bind("<d>", cwSpin)
-    root.bind("<s>", driveReverse)
+    root.bind("<w>", drive_forward)
+    root.bind("<a>", ccw_spin)
+    root.bind("<d>", cw_spin)
+    root.bind("<s>", drive_reverse)
     root.bind("<KeyRelease-w>", stop)
     root.bind("<KeyRelease-a>", stop)
     root.bind("<KeyRelease-s>", stop)
     root.bind("<KeyRelease-d>", stop)
     root.bind("<space>", stop)
-    root.bind("<Up>", armToggle)
-    root.bind("<Down>", armToggle)
-    root.bind("<Left>", gripperToggle)
-    root.bind("<Right>", gripperToggle)
-    root.bind("<,>", speedDecrease)
-    root.bind("<.>", speedIncrease)
-    root.bind("<Shift-Left>", turn_left_degree)
-    root.bind("<Shift-Right>", turn_right_degree)
+    root.bind("<Up>", arm_up)
+    root.bind("<Down>", arm_down)
+    root.bind("<Left>", gripper_toggle)
+    root.bind("<Right>", gripper_toggle)
+    root.bind("<,>", speed_decrease)
+    root.bind("<.>", speed_increase)
+    # root.bind("<Shift-Left>", turn_left_degree)
+    # root.bind("<Shift-Right>", turn_right_degree)
     root.bind("</>", reset_speed)
     root.mainloop()
 
 
+def arm_up(event=None):
+    global pos
+    pos += 20
+    print("Move servo arm up, Current Angle = {}".format(pos))
+
+    board.analog_write(SERVO_GRIPPER_ARM_PIN, pos)
+    pos = min(GRIPPER_ARM_UP, pos)
+    board.sleep(.001)
 
 
-def armToggle(event=None):
-    print("Move servo arm to down position")
-    global arm_up
-    if not arm_up:
-        for pos in range(GRIPPER_ARM_MID, GRIPPER_ARM_DOWN, -1):
-            board.analog_write(SERVO_GRIPPER_ARM_PIN, pos)
-            board.sleep(.001)
-        arm_up = True
-    else:
-        for pos in range(GRIPPER_ARM_MID, GRIPPER_ARM_UP, +1):
-            board.analog_write(SERVO_GRIPPER_ARM_PIN, pos)
-            board.sleep(.001)
-        arm_up = False
+def arm_down(event=None):
+    global pos
+    pos -= 20
+    pos = max(GRIPPER_ARM_DOWN, pos)
+    print("Move servo arm down, Current Angle = {}".format(pos))
+    board.analog_write(SERVO_GRIPPER_ARM_PIN, pos)
+    board.sleep(.001)
 
 
-def gripperToggle(event=None):
+def gripper_toggle(event=None):
     print("Open the gripper")
     global gripper_open
     if not gripper_open:
@@ -149,13 +154,13 @@ def gripperToggle(event=None):
         gripper_open = False
 
 
-def driveForward(event=None):
+def drive_forward(event=None):
     print("Go forward")
     motors.drive(straight_speed)
     last_button_pushed("up")
 
 
-def ccwSpin(event=None):
+def ccw_spin(event=None):
     print("Spin counter clockwise")
     motors.left_rev(turning_speed)
     motors.right_fwd(turning_speed)
@@ -168,20 +173,20 @@ def stop(event=None):
     last_button_pushed("space")
 
 
-def cwSpin(event=None):
+def cw_spin(event=None):
     print("Clockwise spin")
     motors.left_fwd(turning_speed)
     motors.right_rev(turning_speed)
     last_button_pushed("right")
 
 
-def driveReverse(event=None):
+def drive_reverse(event=None):
     print("Go Reverse")
     motors.drive(-straight_speed)
     last_button_pushed("down")
 
 
-def speedIncrease(event=None):
+def speed_increase(event=None):
     global straight_speed
     global turning_speed
     speed_adjust = 30
@@ -193,7 +198,7 @@ def speedIncrease(event=None):
     print("Speed is now : {}, turning speed is : {} ".format(straight_speed, turning_speed))
 
 
-def speedDecrease(event=None):
+def speed_decrease(event=None):
     global straight_speed
     global turning_speed
     speed_adjust = 20
@@ -219,13 +224,13 @@ def reset_speed():
 
 def resend_last_speed():
     if last_button == "down":
-        driveReverse()
+        drive_reverse()
     elif last_button == "up":
-        driveForward()
+        drive_forward()
     elif last_button == "left":
-        ccwSpin()
+        ccw_spin()
     elif last_button == "right":
-        cwSpin()
+        cw_spin()
 
     global speedo_display_straight, speedo_display_turn
     speedo_display_straight.configure(text="Straight speed = " + str(straight_speed))  # Updates the values on the
@@ -233,37 +238,39 @@ def resend_last_speed():
     speedo_display_turn.configure(text="Turning speed = " + str(turning_speed))
 
 
-def turn_left_degree(event=None):
-    encoders.clear_enc()
-    motors.left_rev(turning_speed)
-    motors.right_fwd(turning_speed)
-    left_count = 0
-    right_count = 0
-    while left_count <= TURN_AMOUNT or right_count <= TURN_AMOUNT:
-        left_count = encoders.get_ticks(ENCODER_PIN_LEFT)
-        right_count = encoders.get_ticks(ENCODER_PIN_RIGHT)
-        board.sleep(0.05)
+#TODO: Find out how to put in encoders without blowing everything else up
 
-    motors.brake()
-    pass
-
-
-def turn_right_degree(event=None):
-    encoders.clear_enc()
-    motors.left_fwd(turning_speed)
-    motors.right_rev(turning_speed)
-    left_count = 0
-    right_count = 0
-    while left_count <= TURN_AMOUNT or right_count <= TURN_AMOUNT:
-        left_count = encoders.get_ticks(ENCODER_PIN_LEFT)
-        right_count = encoders.get_ticks(ENCODER_PIN_RIGHT)
-        board.sleep(0.05)
-    motors.brake()
+# def turn_left_degree(event=None):
+#     encoders.clear_enc()
+#     motors.left_rev(turning_speed)
+#     motors.right_fwd(turning_speed)
+#     left_count = 0
+#     right_count = 0
+#     while left_count <= TURN_AMOUNT or right_count <= TURN_AMOUNT:
+#         left_count = encoders.get_ticks(ENCODER_PIN_LEFT)
+#         right_count = encoders.get_ticks(ENCODER_PIN_RIGHT)
+#         board.sleep(0.05)
+#
+#     motors.brake()
+#     pass
+#
+#
+# def turn_right_degree(event=None):
+#     encoders.clear_enc()
+#     motors.left_fwd(turning_speed)
+#     motors.right_rev(turning_speed)
+#     left_count = 0
+#     right_count = 0
+#     while left_count <= TURN_AMOUNT or right_count <= TURN_AMOUNT:
+#         left_count = encoders.get_ticks(ENCODER_PIN_LEFT)
+#         right_count = encoders.get_ticks(ENCODER_PIN_RIGHT)
+#         board.sleep(0.05)
+#     motors.brake()
 
 
 def shutdown(event=None):
     board.sleep(0.1)
-    encoders.shutdown()
+    # encoders.shutdown()
     board.sleep(0.5)
     board.shutdown()
 
