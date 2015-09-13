@@ -24,7 +24,7 @@ SERVO_GRIPPER_PIN = 11
 SERVO_GRIPPER_ARM_PIN = 3
 GRIPPER_CLOSE = 80
 GRIPPER_MID = 120
-GRIPPER_OPEN = 170
+GRIPPER_OPEN = 160
 GRIPPER_ARM_DOWN = 70
 GRIPPER_ARM_MID = 120
 GRIPPER_ARM_UP = 150
@@ -38,6 +38,8 @@ encoders = RedBotEncoder(board)
 motors = RedBotMotors(board)
 ENCODER_PIN_LEFT = 16
 ENCODER_PIN_RIGHT = 10
+gripper_open = False
+arm_up = False
 
 
 def main():
@@ -94,50 +96,57 @@ def main():
     exit_button.grid(column=7, row=8)
     exit_button["command"] = shutdown
 
-    root.bind("<Up>", driveForward)
-    root.bind("<Left>", ccwSpin)
+    root.bind("<w>", driveForward)
+    root.bind("<a>", ccwSpin)
+    root.bind("<d>", cwSpin)
+    root.bind("<s>", driveReverse)
+    root.bind("<KeyRelease-w>", stop)
+    root.bind("<KeyRelease-a>", stop)
+    root.bind("<KeyRelease-s>", stop)
+    root.bind("<KeyRelease-d>", stop)
     root.bind("<space>", stop)
-    root.bind("<Right>", cwSpin)
-    root.bind("<Down>", driveReverse)
-    root.bind("<w>", armUp)
-    root.bind("<s>", armDown)
-    root.bind("<d>", gripperOpen)
-    root.bind("<a>", gripperClose)
+    root.bind("<Up>", armToggle)
+    root.bind("<Down>", armToggle)
+    root.bind("<Left>", gripperToggle)
+    root.bind("<Right>", gripperToggle)
     root.bind("<,>", speedDecrease)
     root.bind("<.>", speedIncrease)
     root.bind("<Shift-Left>", turn_left_degree)
     root.bind("<Shift-Right>", turn_right_degree)
+    root.bind("</>", reset_speed)
     root.mainloop()
 
 
-def armUp(event=None):
-    print("Move servo arm to up position")
-    # board.analog_write(SERVO_GRIPPER_ARM_PIN, GRIPPER_ARM_UP)
-    for pos in range(GRIPPER_ARM_MID, GRIPPER_ARM_UP, +1):
-        board.analog_write(SERVO_GRIPPER_ARM_PIN, pos)
-        board.sleep(.015)
-    global button
 
 
-def armDown(event=None):
+def armToggle(event=None):
     print("Move servo arm to down position")
-    for pos in range(GRIPPER_ARM_MID, GRIPPER_ARM_DOWN, -1):
-        board.analog_write(SERVO_GRIPPER_ARM_PIN, pos)
-        board.sleep(.015)
+    global arm_up
+    if not arm_up:
+        for pos in range(GRIPPER_ARM_MID, GRIPPER_ARM_DOWN, -1):
+            board.analog_write(SERVO_GRIPPER_ARM_PIN, pos)
+            board.sleep(.001)
+        arm_up = True
+    else:
+        for pos in range(GRIPPER_ARM_MID, GRIPPER_ARM_UP, +1):
+            board.analog_write(SERVO_GRIPPER_ARM_PIN, pos)
+            board.sleep(.001)
+        arm_up = False
 
 
-def gripperOpen(event=None):
+def gripperToggle(event=None):
     print("Open the gripper")
-    for pos in range(GRIPPER_MID, GRIPPER_OPEN, +1):
-        board.analog_write(SERVO_GRIPPER_PIN, pos)
-        board.sleep(.015)
-
-
-def gripperClose(event=None):
-    print("Close the gripper")
-    for pos in range(GRIPPER_MID, GRIPPER_CLOSE, -1):
-        board.analog_write(SERVO_GRIPPER_PIN, pos)
-        board.sleep(.015)
+    global gripper_open
+    if not gripper_open:
+        for pos in range(GRIPPER_MID, GRIPPER_OPEN, +1):
+            board.analog_write(SERVO_GRIPPER_PIN, pos)
+            board.sleep(.015)
+        gripper_open = True
+    else:
+        for pos in range(GRIPPER_MID, GRIPPER_CLOSE, -1):
+            board.analog_write(SERVO_GRIPPER_PIN, pos)
+            board.sleep(.015)
+        gripper_open = False
 
 
 def driveForward(event=None):
@@ -253,11 +262,10 @@ def turn_right_degree(event=None):
 
 
 def shutdown(event=None):
-    board.send_reset()
-    board.sleep(2)
+    board.sleep(0.1)
+    encoders.shutdown()
+    board.sleep(0.5)
     board.shutdown()
-
-
 
 
 main()
