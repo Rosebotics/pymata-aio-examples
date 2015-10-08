@@ -9,20 +9,21 @@ import sys
 import signal
 
 from pymata_aio.pymata3 import PyMata3
-from library.redbot import RedBotSensor
+from library.rosebot import RoseBotAnalogSensor
 
 WIFLY_IP_ADDRESS = None            # Leave set as None if not using WiFly
 WIFLY_IP_ADDRESS = "10.0.1.18"  # If using a WiFly on the RedBot, set the ip address here.
+WIFLY_IP_ADDRESS = "r05.wlan.rose-hulman.edu"  # If using a WiFly on the RedBot, set the ip address here.
 if WIFLY_IP_ADDRESS:
-  board = PyMata3(ip_address=WIFLY_IP_ADDRESS)
+    board = PyMata3(ip_address=WIFLY_IP_ADDRESS)
 else:
-  # Use a USB cable to RedBot or an XBee connection instead of WiFly.
-  COM_PORT = None # Use None for automatic com port detection, or set if needed i.e. "COM7"
-  board = PyMata3(com_port=COM_PORT)
+    # Use a USB cable to RedBot or an XBee connection instead of WiFly.
+    COM_PORT = None # Use None for automatic com port detection, or set if needed i.e. "COM7"
+    board = PyMata3(com_port=COM_PORT)
 
-distance_sensor_left = RedBotSensor(board, 3)
-distance_sensor_center = RedBotSensor(board, 6)
-distance_sensor_right = RedBotSensor(board, 7)
+distance_sensor_left = RoseBotAnalogSensor(board, 3)
+distance_sensor_center = RoseBotAnalogSensor(board, 6)
+distance_sensor_right = RoseBotAnalogSensor(board, 7)
 
 
 def signal_handler(sig, frame):

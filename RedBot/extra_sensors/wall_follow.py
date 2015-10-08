@@ -17,7 +17,8 @@ current_milli_time = lambda: int(round(time.time() * 1000))
 
 WIFLY_IP_ADDRESS = None            # Leave set as None if not using WiFly
 WIFLY_IP_ADDRESS = "10.0.1.18"  # If using a WiFly on the RedBot, set the ip address here.
-WIFLY_IP_ADDRESS = "r05.wlan.rose-hulman.edu"  # If using a WiFly on the RedBot, set the ip address here.
+WIFLY_IP_ADDRESS = "137.112.217.96"
+#WIFLY_IP_ADDRESS = "r05.wlan.rose-hulman.edu"  # If using a WiFly on the RedBot, set the ip address here.
 if WIFLY_IP_ADDRESS:
   board = PyMata3(ip_address=WIFLY_IP_ADDRESS)
 else:
