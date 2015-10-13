@@ -1,0 +1,4 @@
+INFO:root:pymata_aio Version 2.4 Copyright (c) 2015 Alan Yorinks All rights reserved.
+INFO:root:Using Ip Address/Port: r05.wlan.rose-hulman.edu:2000
+DEBUG:asyncio:Using selector: SelectSelector
+INFO:root:Auto-discovery complete. Found 22 Digital Pins and 8 Analog Pins
