@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 Drives the RedBot motors around.
+
+This script intentionally uses no library.
 """
 
 from pymata_aio.pymata3 import PyMata3
@@ -15,7 +17,8 @@ R_CTRL_1 = 7
 R_CTRL_2 = 8
 PWM_R = 6
 
-board = PyMata3()
+#board = PyMata3()
+board = PyMata3(ip_address="r05.wlan.rose-hulman.edu")
 
 
 def setup():
