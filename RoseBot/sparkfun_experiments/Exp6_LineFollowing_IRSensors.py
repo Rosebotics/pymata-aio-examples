@@ -13,13 +13,7 @@
   Revised, 31 Oct 2014 B. Huang
   Adapted for pymata-aio 9 Oct 2015 L. Mathews
 """
-
-from pymata_aio.pymata3 import PyMata3
 import rosebot.rosebot as rb
-import sys
-
-
-
 
 def setup():
     print("Welcome to Experiment 6!")
@@ -36,12 +30,12 @@ def loop():
 #  Initializes the robot, instantiating the required board, motor and sensor objects
 # --------------------------------------------------------------------------------------------------
 if __name__ == "__main__":
-    board = PyMata3(ip_address='r03.wlan.rose-hulman.edu')  # change the 'rXX' value
+    board = rb.RoseBotConnection(ip_address='r03.wlan.rose-hulman.edu')  # change the 'rXX' value
     board.keep_alive(2)
     motors = rb.RoseBotMotors(board)
-    IR_sensor_1 = rb.RoseBotAnalogInput(board, rb.PIN_A3)
-    IR_sensor_2 = rb.RoseBotAnalogInput(board, rb.PIN_A6)
-    IR_sensor_3 = rb.RoseBotAnalogInput(board, rb.PIN_A7)
+    IR_sensor_1 = rb.RoseBotAnalogInput(board, rb.RoseBotPhysicalConstants.PIN_A3)
+    IR_sensor_2 = rb.RoseBotAnalogInput(board, rb.RoseBotPhysicalConstants.PIN_A6)
+    IR_sensor_3 = rb.RoseBotAnalogInput(board, rb.RoseBotPhysicalConstants.PIN_A7)
     try:
         setup()
 

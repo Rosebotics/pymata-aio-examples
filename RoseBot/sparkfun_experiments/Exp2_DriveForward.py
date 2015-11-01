@@ -12,8 +12,8 @@ import rosebot.rosebot as rb
 
 
 def main():
-    board = rb.RoseBotConnection(ip_address="r01.wlan.rose-hulman.edu")  # change the 'rXX' value
-    motors = rb.RoseBotMotors(board)    
+    board = rb.RoseBotConnection(ip_address="r03.wlan.rose-hulman.edu")  # change the 'rXX' value
+    motors = rb.RoseBotMotors(board)
     print("Left and right motors at full speed forward")
     motors.drive_pwm(255)  # Turn on Left and right motors at full speed forward.
     board.sleep(2.0)  # Waits for 2 seconds
