@@ -7,24 +7,26 @@
 
  """
 
+
 import rosebot.rosebot as rb
 
+board = rb.RoseBotConnection(ip_address='r03.wlan.rose-hulman.edu', use_log_file=False)
+accelerometer = rb.RoseBotAccelerometer(board)
 
 def main():
-    board = rb.RoseBotConnection(ip_address='r03.wlan.rose-hulman.edu')  # change the 'rXX' value
-    accelerometer = rb.RoseBotAccelerometer(board)
-
-
-
-    while True:
-        if accelerometer.available():
-            accelerometer.read()
-            """Display out the X, Y, and Z - axis "acceleration" measurements and also
+    """Display out the X, Y, and Z - axis "acceleration" measurements and also
             the relative angle between the X-Z, Y-Z, and X-Y vectors. (These give us
             the orientation of the RedBot in 3D space."""
-            print("({}, {}, {}) -- [{:4.2f}, {:4.2f}, {:4.2f}]".format(accelerometer.x, accelerometer.y, accelerometer.z,
-                                                                   accelerometer.angleXZ, accelerometer.angleYZ,
-                                                                   accelerometer.angleXY))
-
-            board.sleep(0.1)  # short delay in between readings
+    while True:
+        if accelerometer.available():
+            values = accelerometer.read()
+            print(
+                'x-val: {:.2f},\t y-val: {:.2f},\t z-val: {:.2f}, \t angle x-z:{:.2f},\t angle y-z: {:.2f},\t angle x-y: {:.2f},\t Tapped?: {},\t Orientation?: {}'\
+                .format(values[rb.RoseBotAccelerometer.VAL_X], values[rb.RoseBotAccelerometer.VAL_Y], \
+                         values[rb.RoseBotAccelerometer.VAL_Z], values[rb.RoseBotAccelerometer.VAL_ANGLE_XZ]\
+                         , values[rb.RoseBotAccelerometer.VAL_ANGLE_YZ], values[rb.RoseBotAccelerometer.VAL_ANGLE_XY]\
+                         , values[rb.RoseBotAccelerometer.VAL_TAPPED], values[rb.RoseBotAccelerometer.VAL_PORT_LAND]))
+        else:
+            print("Where's the device?")
+            board.sleep(.001)
 main()

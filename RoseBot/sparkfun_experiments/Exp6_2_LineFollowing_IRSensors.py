@@ -59,6 +59,6 @@ def main():
             pass
             motors.drive_at_speed(left_speed, right_speed)
         board.sleep(0.1)  # add a delay to decrease sensitivity
-
+main()
 
 

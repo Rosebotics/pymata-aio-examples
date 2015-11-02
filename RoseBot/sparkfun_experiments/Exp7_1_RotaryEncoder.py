@@ -9,15 +9,14 @@
  """
 import rosebot.rosebot as rb
 
-COUNTS_PER_REV = 192  # 4 pairs of N-S x 48:1 gearbox = 192 ticks per wheel rev
-board = rb.RoseBotConnection(ip_address='r03.wlan.rose-hulman.edu')  # change the 'rXX' value
-
-motors = rb.RoseBotMotors(board)
-IR_sensor_center = rb.RoseBotAnalogInput(board, rb.RoseBotPhysicalConstants.PIN_A6)
-encoders = rb.RoseBotEncoder(board)
-button = rb.RoseBotDigitalInput(board, rb.RoseBotPhysicalConstants.PIN_BUTTON)
 
 def main():
+    board = rb.RoseBotConnection(ip_address='r03.wlan.rose-hulman.edu')  # change the 'rXX' value
+    motors = rb.RoseBotMotors(board)
+    IR_sensor_center = rb.RoseBotAnalogInput(board, rb.RoseBotPhysicalConstants.PIN_A6)
+    encoders = rb.RoseBotEncoder(board)
+    button = rb.RoseBotDigitalInput(board, rb.RoseBotPhysicalConstants.PIN_BUTTON)
+
     print("Left     Right")
     print("==============")
     while True:
@@ -31,7 +30,7 @@ def main():
         print("{}       {}".format(count_left, count_right))  # stores the encoder count to a variable
 
         #  if either left or right motor are more than 5 revolutions, stop
-        if count_left >= 5 * COUNTS_PER_REV or count_right >= 5 * COUNTS_PER_REV:
+        if count_left >= 5 * rb.RoseBotPhysicalConstants.COUNTS_PER_REV or count_right >= 5 * rb.RoseBotPhysicalConstants.COUNTS_PER_REV:
             motors.brake()
 
 
