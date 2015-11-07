@@ -10,7 +10,7 @@
 
 import rosebot.rosebot as rb
 
-board = rb.RoseBotConnection(ip_address='r03.wlan.rose-hulman.edu', use_log_file=False)
+board = rb.RoseBotConnection(ip_address='10.0.1.19', use_log_file=False)
 accelerometer = rb.RoseBotAccelerometer(board)
 
 def main():
@@ -20,13 +20,36 @@ def main():
     while True:
         if accelerometer.available():
             values = accelerometer.read()
-            print(
-                'x-val: {:.2f},\t y-val: {:.2f},\t z-val: {:.2f}, \t angle x-z:{:.2f},\t angle y-z: {:.2f},\t angle x-y: {:.2f},\t Tapped?: {},\t Orientation?: {}'\
-                .format(values[rb.RoseBotAccelerometer.VAL_X], values[rb.RoseBotAccelerometer.VAL_Y], \
-                         values[rb.RoseBotAccelerometer.VAL_Z], values[rb.RoseBotAccelerometer.VAL_ANGLE_XZ]\
-                         , values[rb.RoseBotAccelerometer.VAL_ANGLE_YZ], values[rb.RoseBotAccelerometer.VAL_ANGLE_XY]\
-                         , values[rb.RoseBotAccelerometer.VAL_TAPPED], values[rb.RoseBotAccelerometer.VAL_PORT_LAND]))
+            #print("values = " + str(values))
+            x = values[rb.RoseBotAccelerometer.VAL_X]
+            y = values[rb.RoseBotAccelerometer.VAL_Y]
+            z = values[rb.RoseBotAccelerometer.VAL_Z]
+            angle_xz = values[rb.RoseBotAccelerometer.VAL_ANGLE_XZ]
+            angle_yz = values[rb.RoseBotAccelerometer.VAL_ANGLE_YZ]
+            angle_xy = values[rb.RoseBotAccelerometer.VAL_ANGLE_XY]
+            
+            tap = accelerometer.read_tap()
+            if tap:
+                tap = 'TAPPED'
+            else:
+                tap = 'NO TAP'
+                
+            port_land = accelerometer.read_portrait_landscape()
+            if port_land == accelerometer.LOCKOUT:
+                port_land = 'Flat   '
+            elif port_land == 0:
+                port_land = 'Tilt Lf'
+            elif port_land == 1:
+                port_land = 'Tilt Rt'
+            elif port_land == 2:
+                port_land = 'Tilt Up'
+            else:
+                port_land = 'Tilt Dn'
+            print('x-val: {:.2f}, y-val: {:.2f}, z-val: {:.2f} \t angle x-z:{:.2f}, angle y-z: {:.2f}, angle x-y: {:.2f} \t Tapped: {} \t Orientation: {}'.format( \
+                  x, y, z, angle_xz, angle_yz, angle_xy, tap, port_land))
         else:
-            print("Where's the device?")
-            board.sleep(.001)
+            print("Accelerometer not available.  Please try again.")
+            board.sleep(2.0)
+        board.sleep(0.025)
+        
 main()
