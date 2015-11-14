@@ -1,12 +1,14 @@
+"""
+  Basic demo of PID vs non PID driving.
+"""
+
 import rosebot.rosebot as rb
 
-board = rb.RoseBotConnection(ip_address="r05.wlan.rose-hulman.edu", use_log_file=False)
 
-#  board = rb.RoseBotConnection(use_log_file=False)
-
-motors = rb.RoseBotMotors(board)
-encoders = rb.RoseBotEncoder(board)
 def main():
+    board = rb.RoseBotConnection(ip_address="r01.wlan.rose-hulman.edu", use_log_file=False)
+    motors = rb.RoseBotMotors(board)
+
     print("Here is the RoseBot driving Normally (no control inbuilt) ")
     motors.drive_at_speed(30, 30, True)
     board.sleep(15)

@@ -5,6 +5,7 @@
 
   Hardware setup:
   Plug the included RoseBot Buzzer board into the Servo header labeled 9.
+  Make sure the Pixy is NOT connected (it conflicts with the pushbutton on D12)
 
   This sketch was written by SparkFun Electronics, with lots of help from
   the Arduino community. This code is completely free for any use.
@@ -26,7 +27,7 @@ def main():
             buzzer.play_tone(2000, None)
             board.sleep(0.75)
             buzzer.stop()
-    
+
             motors.drive_pwm(255)  # Drive forward for a while
             board.sleep(1.0)
             motors.brake()

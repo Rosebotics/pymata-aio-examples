@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Basic demo of reporting Pixy data.
 
@@ -18,12 +17,12 @@ Basic demo of reporting Pixy data.
 
 import rosebot.rosebot as rb
 
-board = rb.RoseBotConnection(ip_address="r05.wlan.rose-hulman.edu")
-pixy = rb.RoseBotPixy(board)
 
 def main():
-    while 1:
-        board.sleep(0)
+    board = rb.RoseBotConnection(ip_address="r01.wlan.rose-hulman.edu")
+    pixy = rb.RoseBotPixy(board)
+    while True:
+        board.sleep(0.5) # Faster is OK too but unnecessary
         pixy.print_blocks()
 
 
