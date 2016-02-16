@@ -9,7 +9,8 @@ import rosebot.rosebot as rb
 
 
 def main():
-    board = rb.RoseBotConnection(ip_address='r01.wlan.rose-hulman.edu')  # change the 'rXX' value
+    board = rb.RoseBotConnection(ip_address='r01.wlan.rose-hulman.edu', use_log_file=False)  # change the 'rXX' value
+    #board = rb.RoseBotConnection(use_log_file=False)  # change the 'rXX' value
     led = rb.RoseBotDigitalOutput(board, rb.RoseBotPhysicalConstants.PIN_LED)
     while True:
         print("Blink sequence") # The total delay period is 1000 ms, or 1 second.

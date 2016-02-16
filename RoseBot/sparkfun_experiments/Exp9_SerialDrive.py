@@ -9,7 +9,7 @@ Exp9_SerialDrive -- RoseBot Experiment 9
 import rosebot.rosebot as rb
 
 def main():
-    board = rb.RoseBotConnection(ip_address='r03.wlan.rose-hulman.edu')  # change the 'rXX' value
+    board = rb.RoseBotConnection(ip_address='r01.wlan.rose-hulman.edu')  # change the 'rXX' value
     # The heartbeat keep_alive() message does not work with the input() function,
     # so disable keep_alive by setting the parameter to 0.
     board.keep_alive(0)

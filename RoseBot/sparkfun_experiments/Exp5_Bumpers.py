@@ -7,7 +7,7 @@
 """
 import rosebot.rosebot as rb
 
-board = rb.RoseBotConnection(ip_address="r03.wlan.rose-hulman.edu")
+board = rb.RoseBotConnection(ip_address="r01.wlan.rose-hulman.edu")
 # Instantiate the motor control object. This only needs to be done once.
 motors = rb.RoseBotMotors(board)
 left_bumper = rb.RoseBotDigitalInput(board, rb.RoseBotPhysicalConstants.PIN_3)  # initializes bumper object on pin 3
@@ -22,9 +22,10 @@ def main():
         if left_bumper_state == 0:  # left bumper is bumped
             reverse()
             turn_right()
-        if right_bumper_state == 0:  # left bumper is bumped
+        if right_bumper_state == 0:  # Right bumper is bumped
             reverse()
             turn_left()
+        board.sleep(rb.RoseBotConstants.SAMPLING_INTERVAL_S) # Adding a short delay in the main loop is always wise.
 
 
 def reverse():
