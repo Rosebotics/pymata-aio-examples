@@ -4,12 +4,7 @@ Uses the tkinter/ttk graphics library that comes with Python to drive a RedBot.
 
 import tkinter
 from tkinter import ttk
-from pymata_aio.pymata3 import PyMata3
-from examples.sparkfun_redbot.sparkfun_experiments.library.redbot import RedBotEncoder, RedBotMotors
-
-COM_PORT = None  # Use automatic com port detection (the default)
-# COM_PORT = "COM10"  # Manually specify the com port (optional)
-
+import rosebot.rosebot as rb
 
 # RedBot motor pins from RedBot.h
 L_CTRL_1 = 2
@@ -31,17 +26,22 @@ GRIPPER_ARM_UP = 180
 
 straight_speed = 150
 turning_speed = 100
-board = PyMata3(com_port=COM_PORT)
 last_button = None
 TURN_AMOUNT = 30
-# encoders = RedBotEncoder(board)
-motors = RedBotMotors(board)
 ENCODER_PIN_LEFT = 16
 ENCODER_PIN_RIGHT = 10
 gripper_open = False
 arm_up = False
 
 pos = GRIPPER_ARM_MID
+
+board = rb.RoseBotConnection(ip_address='r01.wlan.rose-hulman.edu', use_log_file=False)  # change the 'rXX' value
+#board = rb.RoseBotConnection(use_log_file=False)  # if using a wired connection
+
+board.keep_alive(0) # Testing the removal of the keep alive mechanism
+# Before this was added it would shut down early seems to work if added
+
+motors = rb.RoseBotMotors(board)
 
 
 def main():
@@ -52,7 +52,7 @@ def main():
 
     root = tkinter.Tk()
 
-    root.title("RedBot simple drive")
+    root.title("RoseBot simple drive GUI")
 
     main_frame = ttk.Frame(root, padding=30, relief="raised")
     main_frame.grid()
@@ -114,8 +114,6 @@ def main():
     root.bind("<Right>", gripper_toggle)
     root.bind("<,>", speed_decrease)
     root.bind("<.>", speed_increase)
-    # root.bind("<Shift-Left>", turn_left_degree)
-    # root.bind("<Shift-Right>", turn_right_degree)
     root.bind("</>", reset_speed)
     root.mainloop()
 
@@ -156,14 +154,13 @@ def gripper_toggle(event=None):
 
 def drive_forward(event=None):
     print("Go forward")
-    motors.drive(straight_speed)
+    motors.drive_pwm(straight_speed)
     last_button_pushed("up")
 
 
 def ccw_spin(event=None):
     print("Spin counter clockwise")
-    motors.left_rev(turning_speed)
-    motors.right_fwd(turning_speed)
+    motors.drive_pwm(-turning_speed, turning_speed)
     last_button_pushed("left")
 
 
@@ -175,14 +172,13 @@ def stop(event=None):
 
 def cw_spin(event=None):
     print("Clockwise spin")
-    motors.left_fwd(turning_speed)
-    motors.right_rev(turning_speed)
+    motors.drive_pwm(turning_speed, -turning_speed)
     last_button_pushed("right")
 
 
 def drive_reverse(event=None):
     print("Go Reverse")
-    motors.drive(-straight_speed)
+    motors.drive_pwm(-straight_speed)
     last_button_pushed("down")
 
 
@@ -233,46 +229,11 @@ def resend_last_speed():
         cw_spin()
 
     global speedo_display_straight, speedo_display_turn
-    speedo_display_straight.configure(text="Straight speed = " + str(straight_speed))  # Updates the values on the
-    # tkinter GUI
+    speedo_display_straight.configure(text="Straight speed = " + str(straight_speed))  # Updates values on tkinter GUI
     speedo_display_turn.configure(text="Turning speed = " + str(turning_speed))
-
-
-#TODO: Find out how to put in encoders without blowing everything else up
-
-# def turn_left_degree(event=None):
-#     encoders.clear_enc()
-#     motors.left_rev(turning_speed)
-#     motors.right_fwd(turning_speed)
-#     left_count = 0
-#     right_count = 0
-#     while left_count <= TURN_AMOUNT or right_count <= TURN_AMOUNT:
-#         left_count = encoders.get_ticks(ENCODER_PIN_LEFT)
-#         right_count = encoders.get_ticks(ENCODER_PIN_RIGHT)
-#         board.sleep(0.05)
-#
-#     motors.brake()
-#     pass
-#
-#
-# def turn_right_degree(event=None):
-#     encoders.clear_enc()
-#     motors.left_fwd(turning_speed)
-#     motors.right_rev(turning_speed)
-#     left_count = 0
-#     right_count = 0
-#     while left_count <= TURN_AMOUNT or right_count <= TURN_AMOUNT:
-#         left_count = encoders.get_ticks(ENCODER_PIN_LEFT)
-#         right_count = encoders.get_ticks(ENCODER_PIN_RIGHT)
-#         board.sleep(0.05)
-#     motors.brake()
-
 
 def shutdown(event=None):
     board.sleep(0.1)
-    # encoders.shutdown()
-    board.sleep(0.5)
     board.shutdown()
-
 
 main()
