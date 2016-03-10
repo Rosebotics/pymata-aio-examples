@@ -1,5 +1,5 @@
 """
-Uses the tkinter/ttk graphics library that comes with Python to drive a RoseBot. 
+Uses the tkinter/ttk graphics library that comes with Python to drive a RoseBot.
 """
 import tkinter
 from tkinter import ttk
@@ -12,7 +12,7 @@ last_button = None
 PIXY_CENTER = 160
 servo_position = 90
 # Creating the board object
-board = rb.RoseBotConnection(ip_address='r33.wlan.rose-hulman.edu', use_log_file=False)  # change the 'rXX' value
+board = rb.RoseBotConnection(ip_address='r26.wlan.rose-hulman.edu', use_log_file=False)  # change the 'rXX' value
 # Motor Object
 motors = rb.RoseBotMotors(board)
 # Encoder Object
@@ -69,7 +69,7 @@ def update_values():
         if button_d12.read() == 0:
             button_display.configure(text="Button: PRESSED")
         else:
-            button_display.configure(text="Right Bumper: NOT PRESSED")
+            button_display.configure(text="Button: NOT PRESSED")
 
 
     encoder_right_display.configure(text="Right Encoder Count: " + str(encoders.count_right))
