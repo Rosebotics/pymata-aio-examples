@@ -12,7 +12,7 @@ last_button = None
 PIXY_CENTER = 160
 servo_position = 90
 # Creating the board object
-board = rb.RoseBotConnection(ip_address='r26.wlan.rose-hulman.edu', use_log_file=False)  # change the 'rXX' value
+board = rb.RoseBotConnection(ip_address='r08.wlan.rose-hulman.edu', use_log_file=False)  # change the 'rXX' value
 # Motor Object
 motors = rb.RoseBotMotors(board)
 # Encoder Object
@@ -30,7 +30,7 @@ ir_sensor_center = rb.RoseBotAnalogInput(board, rb.RoseBotPhysicalConstants.PIN_
 ir_sensor_right = rb.RoseBotAnalogInput(board, rb.RoseBotPhysicalConstants.PIN_A5)
 # Bumper Sensors
 bumper_left = rb.RoseBotDigitalInput(board, rb.RoseBotPhysicalConstants.PIN_3)
-bumper_right = rb.RoseBotDigitalInput(board, rb.RoseBotPhysicalConstants.PIN_11)
+bumper_right = rb.RoseBotDigitalInput(board, rb.RoseBotPhysicalConstants.PIN_10)
 # D12 Button
 button_d12 = rb.RoseBotDigitalInput(board, rb.RoseBotPhysicalConstants.PIN_BUTTON)
 
